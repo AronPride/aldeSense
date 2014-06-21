@@ -57,7 +57,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    serialCheck();
+
 
     setGeometry(400, 250, 542, 390);
 
@@ -67,6 +67,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // for making screenshots of the current demo or all demos (for website screenshots):
     //QTimer::singleShot(1500, this, SLOT(allScreenShots()));
     //QTimer::singleShot(4000, this, SLOT(screenShot()));
+    serialCheck();
+
 }
 
 void MainWindow::setupDemo(int demoIndex)
@@ -189,67 +191,21 @@ void MainWindow::realtimeDataSlot()
     ui->customPlot->replot();
 
     // calculate frames per second:
-    static double lastFpsKey;
-    static int frameCount;
-    ++frameCount;
-    if (key-lastFpsKey > 2) // average fps over 2 seconds
-    {
-        ui->statusBar->showMessage(
-                    QString("%1 FPS, Total Data points: %2")
-                    .arg(frameCount/(key-lastFpsKey), 0, 'f', 0)
-                    .arg(ui->customPlot->graph(0)->data()->count()+ui->customPlot->graph(1)->data()->count())
-                    , 0);
-        lastFpsKey = key;
-        frameCount = 0;
+    //static double lastFpsKey;
+    //static int frameCount;
+    //++frameCount;
+    //if (key-lastFpsKey > 2) // average fps over 2 seconds
+    //{
+    //    ui->statusBar->showMessage(
+    //                QString("%1 FPS, Total Data points: %2")
+    //                .arg(frameCount/(key-lastFpsKey), 0, 'f', 0)
+    //                .arg(ui->customPlot->graph(0)->data()->count()+ui->customPlot->graph(1)->data()->count())
+    //                , 0);
+    //    lastFpsKey = key;
+    //    frameCount = 0;
     }
 }
 
-void MainWindow::bracketDataSlot()
-{
-#if QT_VERSION < QT_VERSION_CHECK(4, 7, 0)
-    double secs = 0;
-#else
-    double secs = QDateTime::currentDateTime().toMSecsSinceEpoch()/1000.0;
-#endif
-
-    // update data to make phase move:
-    int n = 500;
-    double phase = secs*5;
-    double k = 3;
-    QVector<double> x(n), y(n);
-    for (int i=0; i<n; ++i)
-    {
-        x[i] = i/(double)(n-1)*34 - 17;
-        y[i] = qExp(-x[i]*x[i]/20.0)*qSin(k*x[i]+phase);
-    }
-    ui->customPlot->graph()->setData(x, y);
-
-    itemDemoPhaseTracer->setGraphKey((8*M_PI+fmod(M_PI*1.5-phase, 6*M_PI))/k);
-
-    ui->customPlot->replot();
-
-    // calculate frames per second:
-    double key = secs;
-    static double lastFpsKey;
-    static int frameCount;
-    ++frameCount;
-    if (key-lastFpsKey > 2) // average fps over 2 seconds
-    {
-        ui->statusBar->showMessage(
-                    QString("%1 FPS, Total Data points: %2")
-                    .arg(frameCount/(key-lastFpsKey), 0, 'f', 0)
-                    .arg(ui->customPlot->graph(0)->data()->count())
-                    , 0);
-        lastFpsKey = key;
-        frameCount = 0;
-    }
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
-    serial.close();
-}
 
 void MainWindow::screenShot()
 {
