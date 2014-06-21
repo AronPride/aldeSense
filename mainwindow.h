@@ -63,7 +63,6 @@ public:
 
 private slots:
   void realtimeDataSlot();
-  void bracketDataSlot();
   void screenShot();
   void allScreenShots();
   void serialCheck();
