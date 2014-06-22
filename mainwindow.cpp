@@ -254,22 +254,27 @@ void MainWindow::allScreenShots()
 }
 
 //Button Functionality
-//*  It measures continuously the voltage on pin A9,
-//*  Write 'c' to turn on lightPin (11),
-//*  Write 'a' to turn off lightPin (11);
-//*  Write 'sample' to sample (200 times in 1 second)
+//*  Always deliniate instructions with a comma!!!
+//*
+//*  Write 'lightOn,' to turn on lightPin (11),
+//*  Write 'lightOff,' to turn off lightPin (11);
+//*  Write 'cycVolt#a#b#c#d' 
+//      #a = sampTime(seconds), 
+//      #b = startVolt
+//      #c = endVolt
+//      #d = sweepRate (ms/v)
 
 void MainWindow::on_pushButton_clicked()
 {
-    serial.write("c");
+    serial.write("lightOn,");
 }
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    serial.write("a");
+    serial.write("lightOff,");
 }
 
 void MainWindow::on_pushButton_3_clicked()
 {
-    serial.write("sample");
+    serial.write("cycVolt012233100,");
 }
